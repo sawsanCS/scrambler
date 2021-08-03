@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import "./Sentence.css";
 
 function Sentence(props) {
   console.log("props of sentence", props);
