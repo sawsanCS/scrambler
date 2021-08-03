@@ -1,11 +1,15 @@
 import React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import LettersLine from "./LettersLine";
 import "./Sentence.css";
 
 function Sentence(props) {
   console.log("props of sentence", props);
   const [finish, setFinish] = useState(false);
-
+  const [scrambledFinalSentence, setScrambledFinalSentence] = useState(
+    props.content.split(" ")
+  );
+  useEffect(() => scrambleSentence(), [props.nbSentence]);
   //a function that scrambles the original sentence and calls a function that scrambles words
   const scrambleSentence = () => {
     let scrambledSentence = [];
@@ -20,6 +24,7 @@ function Sentence(props) {
       }
     }
     console.log("see the result now", scrambledSentence);
+    setScrambledFinalSentence(scrambledSentence);
     return scrambledSentence;
   };
 
@@ -40,10 +45,9 @@ function Sentence(props) {
     return wordArray.join("");
   };
   return (
-      
     <div className="currentSentence">
       <div className="title">
-        {scrambleSentence(props.content).map((word) => {
+        {scrambledFinalSentence.map((word) => {
           return word + "  ";
         })}
       </div>
@@ -57,13 +61,13 @@ function Sentence(props) {
           Next
         </button>
       )}
+      return{" "}
       <div className="inputsToFill">
-          for (let c = 0; c <scrambleSentence(props.content).length; c++) {
-              <LettersLine nb={}/>
-          }
+        {scrambledFinalSentence.map((word) => (
+          <LettersLine nb={word.length} word={word} />
+        ))}
       </div>
     </div>
-
   );
 }
 
