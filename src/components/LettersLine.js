@@ -4,7 +4,7 @@ import "./Sentence.css";
 
 function LettersLine(props) {
   let { nb, word } = props;
-  console.log("nbline", props.nbLine);
+
   const inputReference = useRef();
   useEffect(() => setWordLetters([]), [props.nbLine]);
   useEffect(() => {
@@ -24,7 +24,7 @@ function LettersLine(props) {
     console.log(wordLetters);
     if (e.keyCode === 32) {
       if (wordLetters.length > 1) {
-        if (wordLetters.join("") == props.word) {
+        if (wordLetters.join("") == props.initialWord) {
           alert("correct");
           console.log(
             "njarreb",
@@ -32,7 +32,7 @@ function LettersLine(props) {
           );
         }
       } else {
-        if (wordLetters[0] == props.word) {
+        if (wordLetters[0] == props.initialWord) {
           alert("correct");
           console.log(
             "njarreb",
