@@ -6,6 +6,7 @@ import "./Sentence.css";
 function Sentence(props) {
   console.log("props of sentence", props);
   const [finish, setFinish] = useState(false);
+
   const [scrambledFinalSentence, setScrambledFinalSentence] = useState(
     props.content.split(" ")
   );
