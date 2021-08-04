@@ -5,8 +5,9 @@ import "./Sentence.css";
 
 function Sentence(props) {
   console.log("props of sentence", props);
+  const initialSentenceArray = props.content.split(" ");
   const [finish, setFinish] = useState(false);
-
+  const [nbLine, setNbLine] = useState(0);
   const [scrambledFinalSentence, setScrambledFinalSentence] = useState(
     props.content.split(" ")
   );
@@ -28,7 +29,9 @@ function Sentence(props) {
     setScrambledFinalSentence(scrambledSentence);
     return scrambledSentence;
   };
-
+  const updateNbLine = () => {
+    setNbLine(nbLine + 1);
+  };
   //a function that scrambles words
   const scrambleWord = (word) => {
     let wordArray = word.split("");
@@ -65,7 +68,12 @@ function Sentence(props) {
       return{" "}
       <div className="inputsToFill">
         {scrambledFinalSentence.map((word) => (
-          <LettersLine nb={word.length} word={word} />
+          <LettersLine
+            nb={word.length}
+            word={word}
+            nbLine={updateNbLine}
+            initialSentenceArray={initialSentenceArray}
+          />
         ))}
       </div>
     </div>

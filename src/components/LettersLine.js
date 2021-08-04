@@ -4,8 +4,9 @@ import "./Sentence.css";
 
 function LettersLine(props) {
   let { nb, word } = props;
+  console.log("nbline", props.nbLine);
   const inputReference = useRef();
-
+  useEffect(() => setWordLetters([]), [props.nbLine]);
   useEffect(() => {
     inputReference.current?.focus();
     document.getElementById("letter").reset();
@@ -18,18 +19,25 @@ function LettersLine(props) {
     newWordLetters.push(e.target.value);
     setWordLetters(newWordLetters);
   };
+
   const handleLetterSpace = (e) => {
     console.log(wordLetters);
     if (e.keyCode === 32) {
       if (wordLetters.length > 1) {
         if (wordLetters.join("") == props.word) {
           alert("correct");
-          console.log("njarreb", e.target.Parent);
+          console.log(
+            "njarreb",
+            e.target.parentNode.parentNode.parentNode.childNodes[2]
+          );
         }
       } else {
         if (wordLetters[0] == props.word) {
           alert("correct");
-          console.log("njarreb", e.target.nextElementSibling);
+          console.log(
+            "njarreb",
+            e.target.parentNode.parentNode.parentNode.childNodes[2]
+          );
         }
       }
     }
@@ -39,7 +47,7 @@ function LettersLine(props) {
 
   return (
     <form id="letter">
-      <div className="line">
+      <div className="line" id={props.nbLine}>
         {wordArray.map((letter) => {
           return (
             <input
