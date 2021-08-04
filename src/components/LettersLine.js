@@ -3,8 +3,8 @@ import { useState, useRef, useEffect } from "react";
 import "./Sentence.css";
 
 function LettersLine(props) {
-  let { nb, word } = props;
-
+  let { nb, word, initialWord } = props;
+  const [countChar, setCountChar] = useState(0);
   const inputReference = useRef();
   useEffect(() => setWordLetters([]), [props.nbLine]);
   useEffect(() => {
@@ -16,7 +16,9 @@ function LettersLine(props) {
   const [wordLetters, setWordLetters] = useState([]);
   const handleLetter = (e) => {
     let newWordLetters = [...wordLetters];
-    newWordLetters.push(e.target.value);
+    if (e.target.value !== " ") {
+      newWordLetters.push(e.target.value);
+    }
     setWordLetters(newWordLetters);
   };
 
@@ -47,19 +49,26 @@ function LettersLine(props) {
 
   return (
     <form id="letter">
-      <div className="line" id={props.nbLine}>
+      <div className="line">
         {wordArray.map((letter) => {
+          console.log("countchar", countChar, "letter", letter);
           return (
             <input
               className="letter"
               type="text"
               maxLength="1"
               onKeyUp={(e) => {
-                e.target.className = "greenClassName";
-                e.target.nextElementSibling.focus();
+                if (initialWord[countChar] === e.target.value) {
+                  e.target.className = "greenClassName";
+                  setCountChar(countChar + 1);
+
+                  e.target.nextElementSibling.focus();
+                } else {
+                  e.target.nextElementSibling.focus();
+                  setCountChar(countChar + 1);
+                }
               }}
               onBlur={(e) => {
-                console.log("we left the input");
                 handleLetter(e);
               }}
               ref={inputReference}
@@ -73,6 +82,7 @@ function LettersLine(props) {
           onKeyUp={(e) => {
             e.target.className = "greenClassName";
             handleLetterSpace(e);
+            setCountChar(0);
           }}
           ref={inputReference}
         />
