@@ -36,7 +36,7 @@ function Sentence(props) {
         scrambledSentence.push(words[c]);
       }
     }
-    console.log("see the result now", scrambledSentence);
+
     setScrambledFinalSentence(scrambledSentence);
     return scrambledSentence;
   };
