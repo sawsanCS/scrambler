@@ -12,6 +12,17 @@ function Sentence(props) {
     props.content.split(" ")
   );
   useEffect(() => scrambleSentence(), [props.nbSentence]);
+  useEffect(() => {
+    let matrix = [[]];
+    //init the grid matrix
+    props.content.split(" ").map((el, i) => {
+      matrix[i] = new Array(el.length);
+      matrix[i].map((e) => (e = ""));
+    });
+    setArrayOfWords(matrix);
+  }, [props.nbSentence]);
+  const [arrayOfWords, setArrayOfWords] = useState([[]]);
+
   //a function that scrambles the original sentence and calls a function that scrambles words
   const scrambleSentence = () => {
     let scrambledSentence = [];
@@ -38,7 +49,6 @@ function Sentence(props) {
       do {
         r = Math.floor(Math.random() * wordArray.length - 1) + 1;
       } while (r === 0 || r === wordArray.length - 1);
-      console.log("the random item is", r);
       aux = wordArray[r];
       wordArray[r] = wordArray[c];
       wordArray[c] = aux;
@@ -68,6 +78,9 @@ function Sentence(props) {
               nb={word.length}
               word={word}
               initialWord={initialSentenceArray[i]}
+              longueur={props.longueur}
+              arrayOfWords={arrayOfWords}
+              nbSentence={props.nbSentence}
             />
           );
         })}
