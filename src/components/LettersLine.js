@@ -4,22 +4,30 @@ import "./Sentence.css";
 
 function LettersLine(props) {
   let { nb, word, initialWord } = props;
-  const [countChar, setCountChar] = useState(0);
-  const inputReference = useRef();
-  useEffect(() => setWordLetters([]), [props.nbLine]);
+  let arrayOfWords = [[]];
+  const lineRefs = useRef([]);
+  console.log("props of letter line", props);
+  useEffect(() => setWordLetters([]), [props.word]);
   useEffect(() => {
-    inputReference.current?.focus();
+    lineRefs.current = wordArray.map(
+      (_, i) => lineRefs.current[i] ?? React.createRef()
+    );
+    console.log(lineRefs);
     document.getElementById("letter").reset();
 
     setWordLetters("");
   }, [props.word]);
   const [wordLetters, setWordLetters] = useState([]);
+  const [currentLine, setCurrentLine] = useState(0);
   const handleLetter = (e) => {
-    let newWordLetters = [...wordLetters];
+    /* let newWordLetters = [...wordLetters];
     if (e.target.value !== " ") {
       newWordLetters.push(e.target.value);
+    } else if (e.keyCode === "8" || e.keyCode === "42") {
+      newWordLetters.pop();
     }
-    setWordLetters(newWordLetters);
+    setWordLetters(newWordLetters);*/
+    lineRefs.current[currentLine].focus();
   };
 
   const handleLetterSpace = (e) => {
@@ -28,50 +36,41 @@ function LettersLine(props) {
       if (wordLetters.length > 1) {
         if (wordLetters.join("") == props.initialWord) {
           alert("correct");
-          console.log(
-            "njarreb",
-            e.target.parentNode.parentNode.parentNode.childNodes[2]
-          );
         }
       } else {
         if (wordLetters[0] == props.initialWord) {
           alert("correct");
-          console.log(
-            "njarreb",
-            e.target.parentNode.parentNode.parentNode.childNodes[2]
-          );
         }
       }
     }
   };
   let wordArray = word.split("");
-  console.log("lettersLine", props);
 
   return (
     <form id="letter">
       <div className="line">
-        {wordArray.map((letter) => {
-          console.log("countchar", countChar, "letter", letter);
+        {wordArray.map((letter, i) => {
           return (
             <input
               className="letter"
               type="text"
+              idWord={i}
+              innerRef={lineRefs.current[i]}
               maxLength="1"
               onKeyUp={(e) => {
-                if (initialWord[countChar] === e.target.value) {
+                setCurrentLine(i);
+                arrayOfWords[nbLine][i] = e.target.value;
+                if (initialWord[i] === e.target.value) {
                   e.target.className = "greenClassName";
-                  setCountChar(countChar + 1);
-
                   e.target.nextElementSibling.focus();
                 } else {
                   e.target.nextElementSibling.focus();
-                  setCountChar(countChar + 1);
                 }
               }}
               onBlur={(e) => {
+                console.log("fel blur", e.target.value);
                 handleLetter(e);
               }}
-              ref={inputReference}
             />
           );
         })}
@@ -82,9 +81,7 @@ function LettersLine(props) {
           onKeyUp={(e) => {
             e.target.className = "greenClassName";
             handleLetterSpace(e);
-            setCountChar(0);
           }}
-          ref={inputReference}
         />
       </div>
     </form>

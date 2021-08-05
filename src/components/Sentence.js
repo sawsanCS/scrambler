@@ -4,7 +4,6 @@ import LettersLine from "./LettersLine";
 import "./Sentence.css";
 
 function Sentence(props) {
-  let nbLine = 0;
   console.log("props of sentence", props);
   const initialSentenceArray = props.content.split(" ");
   const [finish, setFinish] = useState(false);
@@ -59,25 +58,25 @@ function Sentence(props) {
         The yellow blocks are meant for spaces
       </div>
       <div className="score">Score : {props.score}</div>
+
+      <div className="inputsToFill">
+        {scrambledFinalSentence.map((word, i) => {
+          console.log("word", word, "number", i);
+          return (
+            <LettersLine
+              nbline={i}
+              nb={word.length}
+              word={word}
+              initialWord={initialSentenceArray[i]}
+            />
+          );
+        })}
+      </div>
       {!finish && (
         <button type="button" onClick={props.nbSentence}>
           Next
         </button>
       )}
-      return{" "}
-      <div className="inputsToFill">
-        {scrambledFinalSentence.map((word) => {
-          nbLine = nbLine + 1;
-          return (
-            <LettersLine
-              nbline={nbLine}
-              nb={word.length}
-              word={word}
-              initialWord={initialSentenceArray[nbLine - 1]}
-            />
-          );
-        })}
-      </div>
     </div>
   );
 }
