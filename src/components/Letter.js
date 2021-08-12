@@ -2,40 +2,53 @@ import React from "react";
 import { useEffect, useState } from "react";
 import LettersLine from "./LettersLine";
 import "./Sentence.css";
-
+const {
+  IdenticalToInitialWord,
+  handleInputAndMoveToNext,
+} = require("./helpers");
 function Letter(props) {
-  const { className, letter, i, nbline, arrayOfWords, id, value } = props;
+  const {
+    className,
+    letter,
+    i,
+    nbline,
+    arrayOfWords,
+    id,
+    initialWord,
+    longueur,
+    finish,
+  } = props;
   const [currentArrayOfWords, setCurrentArrayOfWords] = useState(arrayOfWords);
   const [currentClass, setCurrentClass] = useState(className);
 
   const handleSubmit = (e) => {
+    console.log(
+      "welcome in letter line",
+      nbline,
+      "out of",
+      longueur,
+      "at the position",
+      i,
+      "from length word ",
+      initialWord.length
+    );
     e.preventDefault();
-    //if the user submits a correct letter in the correct space
-    if (letter === e.target.value && e.target.className !== "letterSpace") {
-      e.target.className = "greenClassName";
-      if (e.target.nextElementSibling !== null) {
-        e.target.nextElementSibling.focus();
-      }
+    if (
+      nbline === longueur - 1 &&
+      i === initialWord.length - 1 &&
+      e.target.className === "letter"
+    ) {
+      localStorage.setItem("finish", true);
     }
+    //if the user submits a correct letter in the correct space
+    if (e.keyCode !== 46 && e.keyCode !== 8) {
+      handleInputAndMoveToNext(letter, e);
+    }
+    //once the space letter pressed, we call the function to assess the typed letters
 
     if (e.keyCode === 32 && e.target.className === "letterSpace") {
-      //e.target.className = { greenClassNameForLetterSpace };
-
-      if (currentArrayOfWords[nbline].length > 1) {
-        if (currentArrayOfWords[nbline].join("") === props.initialWord) {
-          alert("correct");
-          e.target.className = "greenClassName";
-          console.log("esm class", e.target.className);
-        }
-      } else {
-        if (currentArrayOfWords[nbline][0] === props.initialWord) {
-          e.target.className = "greenClassName";
-          console.log("esm class", e.target.className);
-          alert("correct");
-        }
-      }
+      IdenticalToInitialWord(e, currentArrayOfWords, nbline, initialWord);
     }
-    console.log("look at the final result", currentArrayOfWords[nbline]);
   };
   return (
     <input
@@ -44,6 +57,7 @@ function Letter(props) {
       idWord={i}
       id={id}
       maxLength="1"
+      finish={finish}
       onKeyUp={(e) => handleSubmit(e)}
       onBlur={(e) => {
         let copyArrayOfWords = [...currentArrayOfWords];

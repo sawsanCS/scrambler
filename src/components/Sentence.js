@@ -5,29 +5,34 @@ import "./Sentence.css";
 
 function Sentence(props) {
   console.log("props of sentence", props);
-  const initialSentenceArray = props.content.split(" ");
+  const { longueur, content, nbSentence, score } = props;
+  const initialSentenceArray = content.split(" ");
   const [finish, setFinish] = useState(false);
-
+  const updateFinish = () => {
+    setFinish(true);
+    console.log("finish", finish);
+  };
   const [scrambledFinalSentence, setScrambledFinalSentence] = useState(
-    props.content.split(" ")
+    content.split(" ")
   );
-  useEffect(() => scrambleSentence(), [props.nbSentence]);
+  useEffect(() => scrambleSentence(), [nbSentence]);
   useEffect(() => {
     let matrix = [[]];
     //init the grid matrix
-    props.content.split(" ").map((el, i) => {
+    content.split(" ").map((el, i) => {
       matrix[i] = new Array(el.length);
       matrix[i].map((e) => (e = ""));
     });
     setArrayOfWords(matrix);
-  }, [props.nbSentence]);
+    // console.log("nthabbet fiha fergha", arrayOfWords, content);
+  }, [nbSentence]);
   const [arrayOfWords, setArrayOfWords] = useState([[]]);
 
   //a function that scrambles the original sentence and calls a function that scrambles words
   const scrambleSentence = () => {
     let scrambledSentence = [];
     let scrambledWord = "";
-    let words = props.content.split(" ");
+    let words = content.split(" ");
     for (let c = 0; c < words.length; c++) {
       if (words[c].length > 2) {
         scrambledWord = scrambleWord(words[c]);
@@ -36,7 +41,6 @@ function Sentence(props) {
         scrambledSentence.push(words[c]);
       }
     }
-
     setScrambledFinalSentence(scrambledSentence);
     return scrambledSentence;
   };
@@ -53,7 +57,7 @@ function Sentence(props) {
       wordArray[r] = wordArray[c];
       wordArray[c] = aux;
     }
-    console.log(wordArray);
+    // console.log(wordArray);
     return wordArray.join("");
   };
   return (
@@ -67,26 +71,27 @@ function Sentence(props) {
       <div className="clarification2">
         The yellow blocks are meant for spaces
       </div>
-      <div className="score">Score : {props.score}</div>
+      <div className="score">Score : {score}</div>
 
       <div className="inputsToFill">
         {scrambledFinalSentence.map((word, i) => {
-          console.log("word", word, "number", i);
+          // console.log("word", word, "number", i, word.length);
           return (
             <LettersLine
               nbline={i}
               nb={word.length}
               word={word}
               initialWord={initialSentenceArray[i]}
-              longueur={props.longueur}
+              longueur={longueur}
               arrayOfWords={arrayOfWords}
-              nbSentence={props.nbSentence}
+              nbSentence={nbSentence}
+              finish={updateFinish}
             />
           );
         })}
       </div>
-      {!finish && (
-        <button type="button" onClick={props.nbSentence}>
+      {JSON.parse(localStorage.getItem("finish")) && (
+        <button type="button" onClick={nbSentence}>
           Next
         </button>
       )}
